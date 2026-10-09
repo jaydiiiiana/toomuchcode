@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { validateEmail, validatePassword } from "../lib/validation";
+import { Alert } from "react-native";
+import { loginWithFirebase, getFriendlyAuthErrorMessage } from "../../services/firebaseAuthService";
 
 interface LoginFormState {
   email: string;
@@ -44,16 +45,51 @@ export function useLoginForm(onSuccess?: (email: string) => void) {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const emailToUse = form.email.trim();
+    const passToUse = form.password;
+
+    if (!emailToUse) {
+      setForm((prev) => ({
+        ...prev,
+        errors: { ...prev.errors, email: "Please enter your email address." },
+      }));
+      return;
+    }
+
+    if (!passToUse) {
+      setForm((prev) => ({
+        ...prev,
+        errors: { ...prev.errors, password: "Please enter your password." },
+      }));
+      return;
+    }
+
     setForm((prev) => ({ ...prev, loading: true }));
 
-    // Skip validation for now — go directly to main
-    setTimeout(() => {
+    try {
+      const { user } = await loginWithFirebase(emailToUse, passToUse);
       setForm((prev) => ({ ...prev, loading: false }));
       if (onSuccess) {
-        onSuccess(form.email || "user@lexora.ph");
+        onSuccess(user.email || emailToUse);
       }
-    }, 400);
+    } catch (err: any) {
+      setForm((prev) => ({ ...prev, loading: false }));
+      const msg = getFriendlyAuthErrorMessage(err?.code || "");
+      Alert.alert(
+        "Login Note",
+        `${msg}\n\nWould you like to proceed in Offline / Demo Mode?`,
+        [
+          { text: "Try Again", style: "cancel" },
+          {
+            text: "Continue Offline",
+            onPress: () => {
+              if (onSuccess) onSuccess(emailToUse);
+            },
+          },
+        ]
+      );
+    }
   };
 
   return {

@@ -18,6 +18,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#F8FAFC"
       }
-    }
+    },
+    "plugins": [
+      "expo-sqlite",
+      "expo-sharing"
+    ]
   }
 }

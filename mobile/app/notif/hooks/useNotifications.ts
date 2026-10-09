@@ -1,23 +1,48 @@
 /**
- * Hook to manage notification state (read/unread, mark all).
+ * Hook to manage notification state (read/unread, mark all) synced with Firestore.
  */
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { NotificationItem } from "../lib/types";
 import { MOCK_NOTIFICATIONS } from "../lib/mockData";
+import {
+  subscribeToNotifications,
+  toggleNotificationReadInFirestore,
+  markAllNotificationsReadInFirestore,
+} from "../../services/firestoreNotificationService";
 
 export function useNotifications() {
-  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<NotificationItem[]>(MOCK_NOTIFICATIONS);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToNotifications((updatedItems) => {
+      setNotifications(updatedItems);
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const markAllRead = useCallback(() => {
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
-  }, []);
+    markAllNotificationsReadInFirestore(notifications);
+  }, [notifications]);
 
-  const toggleRead = useCallback((id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: !n.isRead } : n))
-    );
-  }, []);
+  const toggleRead = useCallback(
+    (id: string) => {
+      const item = notifications.find((n) => n.id === id);
+      const nextState = item ? !item.isRead : true;
+
+      setNotifications((prev) =>
+        prev.map((n) => (n.id === id ? { ...n, isRead: nextState } : n))
+      );
+
+      toggleNotificationReadInFirestore(id, nextState);
+    },
+    [notifications]
+  );
 
   return {
     notifications,

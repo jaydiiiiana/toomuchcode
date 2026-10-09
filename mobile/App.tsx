@@ -5,8 +5,20 @@ import WelcomeScreen from "./app/welcome/page";
 import LoginPage from "./app/login/page";
 import SignUpPage from "./app/sign up/page";
 import MainPage from "./app/main/page";
+import QuestionPage from "./app/question/page";
+import ConsultationPage from "./app/consultation/page";
+import DocumentPage from "./app/document/page";
+import EmergencyPage from "./app/emergency/page";
 
-type Screen = "welcome" | "login" | "signup" | "main";
+type Screen =
+  | "welcome"
+  | "login"
+  | "signup"
+  | "main"
+  | "question"
+  | "consultation"
+  | "document"
+  | "emergency";
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>("welcome");
@@ -39,7 +51,29 @@ export default function App() {
         />
       )}
       {currentScreen === "main" && (
-        <MainPage onLogout={() => setCurrentScreen("welcome")} />
+        <MainPage
+          onLogout={() => setCurrentScreen("welcome")}
+          onOpenScreen={(screen) => setCurrentScreen(screen)}
+        />
+      )}
+      {currentScreen === "question" && (
+        <QuestionPage
+          onBack={() => setCurrentScreen("main")}
+          onNavigateAction={(action) => {
+            if (action === "consult") setCurrentScreen("consultation");
+            else if (action === "document") setCurrentScreen("document");
+            else if (action === "emergency") setCurrentScreen("emergency");
+          }}
+        />
+      )}
+      {currentScreen === "consultation" && (
+        <ConsultationPage onBack={() => setCurrentScreen("main")} />
+      )}
+      {currentScreen === "document" && (
+        <DocumentPage onBack={() => setCurrentScreen("main")} />
+      )}
+      {currentScreen === "emergency" && (
+        <EmergencyPage onBack={() => setCurrentScreen("main")} />
       )}
     </SafeAreaProvider>
   );
