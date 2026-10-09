@@ -17,11 +17,17 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MAIN_COLORS, LEGAL_CATEGORIES, FEATURED_ATTORNEYS } from "../lib/constants";
 import type { AttorneyItem } from "../lib/constants";
 import { QUICK_ACTIONS } from "../lib/mockData";
+import AttorneyDetailModal from "./AttorneyDetailModal";
 
-export default function HomeTab() {
+export interface HomeTabProps {
+  onNavigateAction?: (actionId: "consult" | "ask" | "docs" | "emergency") => void;
+}
+
+export default function HomeTab({ onNavigateAction }: HomeTabProps) {
   const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
+  const [selectedAttorney, setSelectedAttorney] = useState<AttorneyItem | null>(null);
 
   return (
     <ScrollView
@@ -66,6 +72,7 @@ export default function HomeTab() {
               key={action.id}
               style={[styles.quickActionCard, { backgroundColor: action.bgColor }]}
               activeOpacity={0.7}
+              onPress={() => onNavigateAction?.(action.id as any)}
             >
               <View style={[styles.quickActionIcon, { backgroundColor: action.color + "1A" }]}>
                 <Ionicons name={action.icon as any} size={22} color={action.color} />
@@ -126,16 +133,45 @@ export default function HomeTab() {
           </TouchableOpacity>
         </View>
         {FEATURED_ATTORNEYS.map((attorney) => (
-          <AttorneyCard key={attorney.id} attorney={attorney} />
+          <AttorneyCard
+            key={attorney.id}
+            attorney={attorney}
+            onPress={() => setSelectedAttorney(attorney)}
+          />
         ))}
       </View>
+
+      {/* Attorney Detail Modal */}
+      <AttorneyDetailModal
+        attorney={selectedAttorney}
+        visible={!!selectedAttorney}
+        onClose={() => setSelectedAttorney(null)}
+        onBookConsultation={() => {
+          setSelectedAttorney(null);
+          onNavigateAction?.("consult");
+        }}
+        onSendMessage={() => {
+          setSelectedAttorney(null);
+          onNavigateAction?.("ask");
+        }}
+      />
     </ScrollView>
   );
 }
 
-function AttorneyCard({ attorney }: { attorney: AttorneyItem }) {
+function AttorneyCard({
+  attorney,
+  onPress,
+}: {
+  attorney: AttorneyItem;
+  onPress: () => void;
+}) {
   return (
-    <TouchableOpacity style={styles.attorneyCard} activeOpacity={0.7}>
+    <TouchableOpacity
+      style={styles.attorneyCard}
+      activeOpacity={0.7}
+      onPress={onPress}
+    >
       <View style={styles.attorneyLeft}>
         <View style={styles.attorneyAvatar}>
           <Ionicons name="person" size={24} color={MAIN_COLORS.primary} />

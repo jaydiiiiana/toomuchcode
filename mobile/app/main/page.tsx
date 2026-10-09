@@ -13,15 +13,23 @@ import { MAIN_COLORS } from "./lib/constants";
 
 interface MainPageProps {
   onLogout: () => void;
+  onOpenScreen?: (screen: "consultation" | "question" | "document" | "emergency") => void;
 }
 
-export default function MainPage({ onLogout }: MainPageProps) {
+export default function MainPage({ onLogout, onOpenScreen }: MainPageProps) {
   const { activeTab, switchTab } = useMainNavigation("home");
+
+  const handleActionNavigation = (actionId: "consult" | "ask" | "docs" | "emergency") => {
+    if (actionId === "ask") onOpenScreen?.("question");
+    else if (actionId === "consult") onOpenScreen?.("consultation");
+    else if (actionId === "docs") onOpenScreen?.("document");
+    else if (actionId === "emergency") onOpenScreen?.("emergency");
+  };
 
   const renderTab = () => {
     switch (activeTab) {
       case "home":
-        return <HomeTab />;
+        return <HomeTab onNavigateAction={handleActionNavigation} />;
       case "chat":
         return <ChatPage />;
       case "notif":
@@ -29,7 +37,7 @@ export default function MainPage({ onLogout }: MainPageProps) {
       case "profile":
         return <ProfilePage onLogout={onLogout} />;
       default:
-        return <HomeTab />;
+        return <HomeTab onNavigateAction={handleActionNavigation} />;
     }
   };
 
