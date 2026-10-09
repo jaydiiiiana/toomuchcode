@@ -123,7 +123,7 @@ export default function ConsultationPage({ onBack }: ConsultationPageProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: "#F4F8FC",
   },
   resultsBanner: {
     flexDirection: "row",
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 18,
     paddingVertical: 10,
-    backgroundColor: "#F1F5F9",
+    backgroundColor: "#EBF3FA",
   },
   resultsLeft: {
     flexDirection: "row",

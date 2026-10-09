@@ -14,7 +14,7 @@ export default function QuickPrompts({ onSelectPrompt }: QuickPromptsProps) {
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <Ionicons name="flash-outline" size={13} color={AI_COLORS.accent} />
+        <Ionicons name="sparkles-outline" size={13} color={AI_COLORS.primary} />
         <Text style={styles.headerLabel}>Popular Philippine Law Topics:</Text>
       </View>
       <ScrollView
@@ -63,16 +63,16 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   chip: {
-    backgroundColor: AI_COLORS.accentLight,
+    backgroundColor: AI_COLORS.primaryLight,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#DDD6FE",
+    borderColor: AI_COLORS.primarySoft,
   },
   chipText: {
     fontSize: 12,
     fontWeight: "600",
-    color: AI_COLORS.accent,
+    color: AI_COLORS.primaryDark,
   },
 });

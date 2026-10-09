@@ -10,4 +10,14 @@ export interface NotificationItem {
   isRead: boolean;
   type: "appointment" | "message" | "system" | "promo";
   icon: string;
+  fullMessage?: string;
+  senderOrSource?: string;
+  referenceNumber?: string;
+  actionLabel?: string;
+  metadata?: {
+    date?: string;
+    timeSlot?: string;
+    location?: string;
+    attorneyName?: string;
+  };
 }

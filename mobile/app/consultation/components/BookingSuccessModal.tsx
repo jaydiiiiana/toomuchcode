@@ -30,7 +30,7 @@ export default function BookingSuccessModal({
       <View style={styles.overlay}>
         <View style={styles.card}>
           <View style={styles.iconCircle}>
-            <Ionicons name="checkmark-done" size={32} color="#059669" />
+            <Ionicons name="checkmark-done" size={32} color={CONSULTATION_COLORS.primaryDark} />
           </View>
 
           <Text style={styles.title}>Consultation Requested!</Text>
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: "#D1FAE5",
+    backgroundColor: CONSULTATION_COLORS.primaryLight,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 16,

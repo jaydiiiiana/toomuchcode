@@ -1,7 +1,7 @@
 /**
  * Notifications page – Main entry point for the Notif screen.
  */
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, FlatList, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -9,10 +9,20 @@ import { NOTIF_COLORS } from "./lib/constants";
 import { useNotifications } from "./hooks/useNotifications";
 import NotifHeader from "./components/NotifHeader";
 import NotifRow from "./components/NotifRow";
+import NotificationDetailModal from "./components/NotificationDetailModal";
+import type { NotificationItem } from "./lib/types";
 
 export default function NotifPage() {
   const insets = useSafeAreaInsets();
   const { notifications, unreadCount, markAllRead, toggleRead } = useNotifications();
+  const [selectedNotif, setSelectedNotif] = useState<NotificationItem | null>(null);
+
+  const handlePressNotif = (item: NotificationItem) => {
+    if (!item.isRead) {
+      toggleRead(item.id);
+    }
+    setSelectedNotif(item);
+  };
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -22,7 +32,7 @@ export default function NotifPage() {
         data={notifications}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <NotifRow item={item} onPress={() => toggleRead(item.id)} />
+          <NotifRow item={item} onPress={() => handlePressNotif(item)} />
         )}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
@@ -35,6 +45,13 @@ export default function NotifPage() {
             </Text>
           </View>
         }
+      />
+
+      {/* Full Notification Detail Modal */}
+      <NotificationDetailModal
+        notification={selectedNotif}
+        visible={!!selectedNotif}
+        onClose={() => setSelectedNotif(null)}
       />
     </View>
   );

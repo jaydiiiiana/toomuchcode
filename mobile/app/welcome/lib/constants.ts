@@ -5,15 +5,15 @@
 export const COLORS = {
   surface: "#FFFFFF",
   surfaceCard: "#FFFFFF",
-  surfaceBorder: "#E2E8F0",
-  primary: "#0284C7",
-  primaryDark: "#0369A1",
-  primaryLight: "#E0F2FE",
-  accent: "#D97706",
-  accentLight: "#FEF3C7",
-  textPrimary: "#0F172A",
+  surfaceBorder: "#D8E6F5",
+  primary: "#5B9BD5",
+  primaryDark: "#2B6CB0",
+  primaryLight: "#EBF3FA",
+  accent: "#5B9BD5",
+  accentLight: "#EBF3FA",
+  textPrimary: "#1E293B",
   textSecondary: "#475569",
-  textMuted: "#64748B",
+  textMuted: "#88A3C0",
 } as const;
 
 export const MASCOT_IMAGE = require("../../../assets/robot-mascot.png");

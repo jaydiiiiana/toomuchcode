@@ -226,8 +226,8 @@ const styles = StyleSheet.create({
     borderColor: CONSULTATION_COLORS.border,
   },
   availableToggleActive: {
-    backgroundColor: CONSULTATION_COLORS.successLight,
-    borderColor: "#A7F3D0",
+    backgroundColor: CONSULTATION_COLORS.primaryLight,
+    borderColor: CONSULTATION_COLORS.border,
   },
   availableDot: {
     width: 7,
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     backgroundColor: CONSULTATION_COLORS.textMuted,
   },
   availableDotActive: {
-    backgroundColor: CONSULTATION_COLORS.success,
+    backgroundColor: CONSULTATION_COLORS.primary,
   },
   availableToggleText: {
     fontSize: 11,
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     color: CONSULTATION_COLORS.textSecondary,
   },
   availableToggleTextActive: {
-    color: CONSULTATION_COLORS.success,
+    color: CONSULTATION_COLORS.primaryDark,
   },
   searchWrapper: {
     flexDirection: "row",
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#F1F5F9",
   },
   specChipActive: {
-    backgroundColor: CONSULTATION_COLORS.accentLight,
+    backgroundColor: CONSULTATION_COLORS.primaryLight,
   },
   specChipText: {
     fontSize: 11.5,
@@ -311,6 +311,6 @@ const styles = StyleSheet.create({
     color: CONSULTATION_COLORS.textSecondary,
   },
   specChipTextActive: {
-    color: CONSULTATION_COLORS.accent,
+    color: CONSULTATION_COLORS.primaryDark,
   },
 });

@@ -16,32 +16,32 @@ const EMERGENCY_CONTACTS = [
     number: "911",
     desc: "Police, Fire, Medical, Rescue",
     icon: "call",
-    color: "#DC2626",
-    bg: "#FEE2E2",
+    color: "#2B6CB0",
+    bg: "#EBF3FA",
   },
   {
     title: "Public Attorney's Office (PAO)",
     number: "(02) 8929-9436",
     desc: "Free legal representation for indigents & inquest",
     icon: "shield-checkmark",
-    color: "#0284C7",
-    bg: "#E0F2FE",
+    color: "#2B6CB0",
+    bg: "#EBF3FA",
   },
   {
     title: "Commission on Human Rights (CHR)",
     number: "0920-509-9940",
     desc: "Arrest violations, illegal detention, human rights",
     icon: "hand-left",
-    color: "#7C3AED",
-    bg: "#EDE9FE",
+    color: "#2B6CB0",
+    bg: "#EBF3FA",
   },
   {
     title: "PNP Women & Children Protection",
     number: "(02) 8532-6690",
     desc: "VAWC, domestic abuse, harassment hotline",
     icon: "heart",
-    color: "#E11D48",
-    bg: "#FFE4E6",
+    color: "#2B6CB0",
+    bg: "#EBF3FA",
   },
 ];
 
@@ -69,7 +69,7 @@ export default function EmergencyPage({ onBack }: EmergencyPageProps) {
 
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.alertCard}>
-          <Ionicons name="warning" size={32} color="#DC2626" />
+          <Ionicons name="information-circle" size={32} color="#5B9BD5" />
           <Text style={styles.alertTitle}>Know Your Miranda Rights</Text>
           <Text style={styles.alertBody}>
             If detained or questioned by authorities in the Philippines:
@@ -97,7 +97,7 @@ export default function EmergencyPage({ onBack }: EmergencyPageProps) {
               <Text style={styles.contactDesc}>{item.desc}</Text>
             </View>
             <View style={styles.callBadge}>
-              <Ionicons name="call" size={16} color="#059669" />
+              <Ionicons name="call" size={16} color="#2B6CB0" />
               <Text style={styles.callText}>Call</Text>
             </View>
           </TouchableOpacity>
@@ -139,22 +139,22 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   alertCard: {
-    backgroundColor: "#FEF2F2",
+    backgroundColor: "#F4F8FC",
     borderRadius: 16,
     padding: 18,
     borderWidth: 1,
-    borderColor: "#FECACA",
+    borderColor: "#D8E6F5",
   },
   alertTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#991B1B",
+    color: "#1E3A8A",
     marginTop: 8,
     marginBottom: 6,
   },
   alertBody: {
     fontSize: 13,
-    color: "#7F1D1D",
+    color: "#334155",
     lineHeight: 20,
   },
   sectionTitle: {
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   contactNumber: {
     fontSize: 13.5,
     fontWeight: "600",
-    color: "#0284C7",
+    color: "#2B6CB0",
     marginTop: 2,
   },
   contactDesc: {
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-    backgroundColor: "#D1FAE5",
+    backgroundColor: "#EBF3FA",
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 12,
@@ -211,6 +211,6 @@ const styles = StyleSheet.create({
   callText: {
     fontSize: 12,
     fontWeight: "700",
-    color: "#059669",
+    color: "#2B6CB0",
   },
 });

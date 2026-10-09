@@ -4,6 +4,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { LOCAL_VALENZUELA_ATTORNEYS } from "../lib/mockData";
 import type { AreaAttorney, BookingRequest } from "../lib/types";
+import { saveConsultationBooking } from "../../database";
 
 export function useConsultation() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -50,7 +51,12 @@ export function useConsultation() {
     });
   }, [searchQuery, selectedBarangay, selectedSpecialty, filterAvailableOnly]);
 
-  const handleBook = useCallback((request: BookingRequest) => {
+  const handleBook = useCallback(async (request: BookingRequest) => {
+    try {
+      await saveConsultationBooking(request);
+    } catch (err) {
+      console.warn("Failed to persist booking to SQLite:", err);
+    }
     setSelectedAttorney(null);
     setBookedSuccess(request);
   }, []);

@@ -78,7 +78,9 @@ export default function AttorneyDetailModal({
                 style={[
                   styles.availBadge,
                   {
-                    backgroundColor: attorney.isAvailable ? "#D1FAE5" : "#FEE2E2",
+                    backgroundColor: attorney.isAvailable
+                      ? MAIN_COLORS.primaryLight
+                      : "#F1F5F9",
                   },
                 ]}
               >
@@ -86,7 +88,9 @@ export default function AttorneyDetailModal({
                   style={[
                     styles.availDot,
                     {
-                      backgroundColor: attorney.isAvailable ? "#059669" : "#DC2626",
+                      backgroundColor: attorney.isAvailable
+                        ? MAIN_COLORS.primary
+                        : MAIN_COLORS.textMuted,
                     },
                   ]}
                 />
@@ -94,11 +98,15 @@ export default function AttorneyDetailModal({
                   style={[
                     styles.availText,
                     {
-                      color: attorney.isAvailable ? "#059669" : "#DC2626",
+                      color: attorney.isAvailable
+                        ? MAIN_COLORS.primaryDark
+                        : MAIN_COLORS.textMuted,
                     },
                   ]}
                 >
-                  {attorney.isAvailable ? "Available for Consultation" : "Currently Busy"}
+                  {attorney.isAvailable
+                    ? "Available for Consultation"
+                    : "Currently Busy"}
                 </Text>
               </View>
             </View>
@@ -286,7 +294,7 @@ const styles = StyleSheet.create({
     width: 86,
     height: 86,
     borderRadius: 43,
-    backgroundColor: "#E0F2FE",
+    backgroundColor: MAIN_COLORS.primaryLight,
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
@@ -299,7 +307,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#059669",
+    backgroundColor: MAIN_COLORS.primary,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
@@ -401,17 +409,17 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   chip: {
-    backgroundColor: "#E0F2FE",
+    backgroundColor: MAIN_COLORS.primaryLight,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#BAE6FD",
+    borderColor: MAIN_COLORS.border,
   },
   chipText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#0369A1",
+    color: MAIN_COLORS.primaryDark,
   },
   credentialCard: {
     backgroundColor: "#F8FAFC",

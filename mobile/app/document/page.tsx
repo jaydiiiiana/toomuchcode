@@ -31,7 +31,7 @@ export default function DocumentPage({ onBack }: DocumentPageProps) {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.uploadBox}>
           <View style={styles.uploadIcon}>
-            <Ionicons name="cloud-upload-outline" size={36} color="#059669" />
+            <Ionicons name="cloud-upload-outline" size={36} color="#5B9BD5" />
           </View>
           <Text style={styles.uploadTitle}>Upload Legal Document</Text>
           <Text style={styles.uploadSubtitle}>
@@ -46,7 +46,7 @@ export default function DocumentPage({ onBack }: DocumentPageProps) {
         <Text style={styles.sectionTitle}>Common Legal Document Templates</Text>
 
         <TouchableOpacity style={styles.templateCard} activeOpacity={0.7}>
-          <Ionicons name="document-text-outline" size={24} color="#059669" />
+          <Ionicons name="document-text-outline" size={24} color="#5B9BD5" />
           <View style={styles.templateInfo}>
             <Text style={styles.templateName}>Contract of Lease (Residential)</Text>
             <Text style={styles.templateDesc}>Standard Philippine rental agreement</Text>
@@ -55,7 +55,7 @@ export default function DocumentPage({ onBack }: DocumentPageProps) {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.templateCard} activeOpacity={0.7}>
-          <Ionicons name="document-text-outline" size={24} color="#059669" />
+          <Ionicons name="document-text-outline" size={24} color="#5B9BD5" />
           <View style={styles.templateInfo}>
             <Text style={styles.templateName}>Affidavit of Loss</Text>
             <Text style={styles.templateDesc}>Notarization-ready template</Text>
@@ -64,7 +64,7 @@ export default function DocumentPage({ onBack }: DocumentPageProps) {
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.templateCard} activeOpacity={0.7}>
-          <Ionicons name="document-text-outline" size={24} color="#059669" />
+          <Ionicons name="document-text-outline" size={24} color="#5B9BD5" />
           <View style={styles.templateInfo}>
             <Text style={styles.templateName}>Formal Demand Letter</Text>
             <Text style={styles.templateDesc}>For collection of debt or notice to vacate</Text>
@@ -109,18 +109,18 @@ const styles = StyleSheet.create({
   },
   uploadBox: {
     borderWidth: 2,
-    borderColor: "#A7F3D0",
+    borderColor: "#D8E6F5",
     borderStyle: "dashed",
     borderRadius: 18,
     padding: 24,
     alignItems: "center",
-    backgroundColor: "#ECFDF5",
+    backgroundColor: "#F4F8FC",
   },
   uploadIcon: {
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#D1FAE5",
+    backgroundColor: "#EBF3FA",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 12,
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: "#059669",
+    backgroundColor: "#5B9BD5",
     paddingHorizontal: 18,
     paddingVertical: 10,
     borderRadius: 12,
