@@ -1,7 +1,7 @@
 /**
  * Home tab – Dashboard with greeting, search, quick actions, categories, and featured attorneys.
  */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,9 +14,10 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { MAIN_COLORS, LEGAL_CATEGORIES, FEATURED_ATTORNEYS } from "../lib/constants";
+import { MAIN_COLORS, LEGAL_CATEGORIES } from "../lib/constants";
 import type { AttorneyItem } from "../lib/constants";
 import { QUICK_ACTIONS } from "../lib/mockData";
+import { subscribeToAttorneys } from "../../services/firestoreAttorneyService";
 import AttorneyDetailModal from "./AttorneyDetailModal";
 
 export interface HomeTabProps {
@@ -27,7 +28,18 @@ export default function HomeTab({ onNavigateAction }: HomeTabProps) {
   const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
+  const [attorneys, setAttorneys] = useState<AttorneyItem[]>([]);
   const [selectedAttorney, setSelectedAttorney] = useState<AttorneyItem | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToAttorneys((items) => {
+      setAttorneys(items as unknown as AttorneyItem[]);
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
 
   return (
     <ScrollView
@@ -132,13 +144,20 @@ export default function HomeTab({ onNavigateAction }: HomeTabProps) {
             <Text style={styles.seeAll}>See All</Text>
           </TouchableOpacity>
         </View>
-        {FEATURED_ATTORNEYS.map((attorney) => (
-          <AttorneyCard
-            key={attorney.id}
-            attorney={attorney}
-            onPress={() => setSelectedAttorney(attorney)}
-          />
-        ))}
+        {attorneys.length > 0 ? (
+          attorneys.map((attorney) => (
+            <AttorneyCard
+              key={attorney.id}
+              attorney={attorney}
+              onPress={() => setSelectedAttorney(attorney)}
+            />
+          ))
+        ) : (
+          <View style={styles.emptyAttorneys}>
+            <Ionicons name="people-outline" size={32} color={MAIN_COLORS.border} />
+            <Text style={styles.emptyAttorneysText}>No registered attorneys available yet</Text>
+          </View>
+        )}
       </View>
 
       {/* Attorney Detail Modal */}
@@ -439,5 +458,20 @@ const styles = StyleSheet.create({
   availText: {
     fontSize: 11,
     fontWeight: "700",
+  },
+  emptyAttorneys: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 28,
+    backgroundColor: MAIN_COLORS.surfaceCard,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: MAIN_COLORS.border,
+    gap: 8,
+  },
+  emptyAttorneysText: {
+    fontSize: 13,
+    color: MAIN_COLORS.textMuted,
+    fontWeight: "500",
   },
 });

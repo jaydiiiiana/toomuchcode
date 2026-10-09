@@ -1,9 +1,9 @@
 /**
  * Hook to manage notification state (read/unread, mark all) synced with Firestore.
+ * No mock data — starts empty and syncs with Firestore in real-time.
  */
 import { useState, useEffect, useCallback } from "react";
 import { NotificationItem } from "../lib/types";
-import { MOCK_NOTIFICATIONS } from "../lib/mockData";
 import {
   subscribeToNotifications,
   toggleNotificationReadInFirestore,
@@ -11,7 +11,7 @@ import {
 } from "../../services/firestoreNotificationService";
 
 export function useNotifications() {
-  const [notifications, setNotifications] = useState<NotificationItem[]>(MOCK_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
 
   useEffect(() => {
     const unsubscribe = subscribeToNotifications((updatedItems) => {

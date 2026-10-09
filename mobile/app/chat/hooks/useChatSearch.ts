@@ -1,14 +1,14 @@
 /**
  * Hook to manage chat search state and real-time Firestore threads.
+ * Uses real-time data from Firestore.
  */
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { ChatThread } from "../lib/types";
-import { MOCK_CHATS } from "../lib/mockData";
 import { subscribeToChatThreads } from "../../services/firestoreChatService";
 
 export function useChatSearch() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [threads, setThreads] = useState<ChatThread[]>(MOCK_CHATS);
+  const [threads, setThreads] = useState<ChatThread[]>([]);
 
   useEffect(() => {
     const unsubscribe = subscribeToChatThreads((updatedThreads) => {

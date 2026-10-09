@@ -8,25 +8,20 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import LoginHeader from "./components/LoginHeader";
 import LoginForm from "./components/LoginForm";
-import SocialLoginButtons from "./components/SocialLoginButtons";
 import LoginFooter from "./components/LoginFooter";
 import { useLoginForm } from "./hooks/useLoginForm";
 import { LOGIN_COLORS } from "./lib/constants";
 
 interface LoginPageProps {
   onNavigateToSignUp: () => void;
-  onLoginSuccess?: (email: string) => void;
+  onLoginSuccess?: (email: string, role?: "client" | "attorney" | "admin") => void;
   onForgotPassword?: () => void;
-  onGoogleLogin?: () => void;
-  onAppleLogin?: () => void;
 }
 
 export default function LoginPage({
   onNavigateToSignUp,
   onLoginSuccess,
   onForgotPassword,
-  onGoogleLogin,
-  onAppleLogin,
 }: LoginPageProps) {
   const {
     email,
@@ -66,12 +61,6 @@ export default function LoginPage({
             onToggleShowPassword={toggleShowPassword}
             onSubmit={handleSubmit}
             onForgotPassword={onForgotPassword}
-          />
-
-          {/* Social Logins */}
-          <SocialLoginButtons
-            onGoogleLogin={onGoogleLogin}
-            onAppleLogin={onAppleLogin}
           />
 
           {/* Footer */}

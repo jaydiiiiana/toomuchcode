@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Alert } from "react-native";
 import { loginWithFirebase, getFriendlyAuthErrorMessage } from "../../services/firebaseAuthService";
+import { getLocalProfile } from "../../services/userProfileService";
 
 interface LoginFormState {
   email: string;
@@ -13,7 +14,9 @@ interface LoginFormState {
   loading: boolean;
 }
 
-export function useLoginForm(onSuccess?: (email: string) => void) {
+export function useLoginForm(
+  onSuccess?: (email: string, role?: "client" | "attorney" | "admin") => void
+) {
   const [form, setForm] = useState<LoginFormState>({
     email: "",
     password: "",
@@ -68,13 +71,28 @@ export function useLoginForm(onSuccess?: (email: string) => void) {
     setForm((prev) => ({ ...prev, loading: true }));
 
     try {
-      const { user } = await loginWithFirebase(emailToUse, passToUse);
+      const { user, profile } = await loginWithFirebase(emailToUse, passToUse);
       setForm((prev) => ({ ...prev, loading: false }));
+
+      const detectedRole = profile?.role || (emailToUse.toLowerCase() === "admin@lexora.ph" ? "admin" : "client");
+
       if (onSuccess) {
-        onSuccess(user.email || emailToUse);
+        onSuccess(user.email || emailToUse, detectedRole);
       }
     } catch (err: any) {
       setForm((prev) => ({ ...prev, loading: false }));
+
+      // Check role offline
+      let fallbackRole: "client" | "attorney" | "admin" = "client";
+      if (emailToUse.toLowerCase() === "admin@lexora.ph") {
+        fallbackRole = "admin";
+      } else {
+        const localCached = await getLocalProfile(emailToUse);
+        if (localCached?.role) {
+          fallbackRole = localCached.role;
+        }
+      }
+
       const msg = getFriendlyAuthErrorMessage(err?.code || "");
       Alert.alert(
         "Login Note",
@@ -84,7 +102,7 @@ export function useLoginForm(onSuccess?: (email: string) => void) {
           {
             text: "Continue Offline",
             onPress: () => {
-              if (onSuccess) onSuccess(emailToUse);
+              if (onSuccess) onSuccess(emailToUse, fallbackRole);
             },
           },
         ]

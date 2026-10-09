@@ -132,6 +132,19 @@ export default function LoginForm({
           <Text style={styles.submitButtonText}>{LOGIN_COPY.submitButton}</Text>
         )}
       </TouchableOpacity>
+
+      {/* Admin Account Quick Demo Fill */}
+      <TouchableOpacity
+        style={styles.adminQuickBtn}
+        activeOpacity={0.75}
+        onPress={() => {
+          onChangeEmail("admin@lexora.ph");
+          onChangePassword("AdminPassword123!");
+        }}
+      >
+        <Ionicons name="shield-checkmark-outline" size={16} color={LOGIN_COLORS.primary} />
+        <Text style={styles.adminQuickText}>Fill Admin Credentials (admin@lexora.ph)</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -205,5 +218,23 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     color: "#FFFFFF",
     letterSpacing: 0.3,
+  },
+  adminQuickBtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 6,
+    marginTop: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    backgroundColor: LOGIN_COLORS.primaryLight || "#EEF2FF",
+    borderWidth: 1,
+    borderColor: "#C7D2FE",
+  },
+  adminQuickText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: LOGIN_COLORS.primary,
   },
 });
