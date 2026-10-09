@@ -1,18 +1,32 @@
 /**
- * Hook to manage chat search state.
+ * Hook to manage chat search state and real-time Firestore threads.
  */
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { ChatThread } from "../lib/types";
 import { MOCK_CHATS } from "../lib/mockData";
+import { subscribeToChatThreads } from "../../services/firestoreChatService";
 
 export function useChatSearch() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [threads, setThreads] = useState<ChatThread[]>(MOCK_CHATS);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToChatThreads((updatedThreads) => {
+      setThreads(updatedThreads);
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
 
   const filteredChats = useMemo(
     () =>
-      MOCK_CHATS.filter((c) =>
-        c.name.toLowerCase().includes(searchQuery.toLowerCase())
+      threads.filter((c) =>
+        c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (c.lastMessage && c.lastMessage.toLowerCase().includes(searchQuery.toLowerCase()))
       ),
-    [searchQuery]
+    [threads, searchQuery]
   );
 
   const clearSearch = useCallback(() => setSearchQuery(""), []);

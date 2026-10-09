@@ -1,5 +1,5 @@
 /**
- * Types for the Chat screen.
+ * Types for the Chat screen with Offline AI & Attorney sync.
  */
 
 export interface ChatThread {
@@ -15,7 +15,10 @@ export interface ChatThread {
 
 export interface DirectMessage {
   id: string;
-  senderId: "user" | "attorney";
+  senderId: "user" | "attorney" | "ai";
   text: string;
   timestamp: string;
+  isOffline?: boolean;
+  citations?: string[];
+  isCaseSummary?: boolean;
 }

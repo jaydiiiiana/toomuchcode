@@ -112,3 +112,8 @@ export const MOCK_THREAD_MESSAGES: Record<string, import("./types").DirectMessag
     },
   ],
 };
+
+export {
+  generatePhilippineAIResponse,
+  generateAttorneyCaseSummary,
+} from "./philippineLegalAI";

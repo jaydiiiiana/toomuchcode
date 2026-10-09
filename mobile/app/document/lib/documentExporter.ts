@@ -89,17 +89,37 @@ export async function exportToPdf(title: string, content: string): Promise<boole
       base64: false,
     });
 
+    const safeFilename = `${title.replace(/[^a-zA-Z0-9_-]/g, "_")}.pdf`;
+    let shareUri = uri;
+
+    try {
+      const destFile = new File(Paths.cache, safeFilename);
+      const srcFile = new File(uri);
+      await srcFile.copy(destFile, { overwrite: true });
+      shareUri = destFile.uri;
+    } catch (copyErr) {
+      console.warn("Could not copy PDF to cache root, using original uri:", copyErr);
+    }
+
     // Check if sharing is available
     const isAvailable = await Sharing.isAvailableAsync();
     if (isAvailable) {
-      await Sharing.shareAsync(uri, {
-        UTI: ".pdf",
-        mimeType: "application/pdf",
-        dialogTitle: `Save or Share ${title}`,
-      });
-      return true;
+      try {
+        await Sharing.shareAsync(shareUri, {
+          UTI: ".pdf",
+          mimeType: "application/pdf",
+          dialogTitle: `Save or Share ${title}`,
+        });
+        return true;
+      } catch (shareErr) {
+        console.warn("Sharing rejected by OS, opening print spooler fallback:", shareErr);
+        // Fallback: Android & iOS native print dialog has built-in "Save as PDF"
+        await Print.printAsync({ html });
+        return true;
+      }
     } else {
-      Alert.alert("PDF Generated", `Saved to temporary file:\n${uri}`);
+      // Fallback: print spooler
+      await Print.printAsync({ html });
       return true;
     }
   } catch (error: any) {

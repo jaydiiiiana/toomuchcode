@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Alert } from "react-native";
 import {
   validateConfirmPassword,
   validateEmail,
@@ -6,6 +7,10 @@ import {
   validatePassword,
   validatePhone,
 } from "../lib/validation";
+import {
+  signUpWithFirebase,
+  getFriendlyAuthErrorMessage,
+} from "../../services/firebaseAuthService";
 
 interface SignUpFormState {
   name: string;
@@ -105,7 +110,7 @@ export function useSignUpForm(onSuccess?: (userData: { name: string; email: stri
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const nameError = validateName(form.name);
     const emailError = validateEmail(form.email);
     const phoneError = validatePhone(form.phone);
@@ -142,15 +147,35 @@ export function useSignUpForm(onSuccess?: (userData: { name: string; email: stri
 
     setForm((prev) => ({ ...prev, loading: true }));
 
-    // Simulate registration
-    setTimeout(() => {
+    try {
+      const { user } = await signUpWithFirebase(
+        form.name,
+        form.email,
+        form.phone,
+        form.password
+      );
+
       setForm((prev) => ({ ...prev, loading: false }));
       if (onSuccess) {
-        onSuccess({ name: form.name, email: form.email });
-      } else {
-        console.log("Account created for:", form.name, form.email);
+        onSuccess({ name: form.name, email: user.email || form.email });
       }
-    }, 900);
+    } catch (err: any) {
+      setForm((prev) => ({ ...prev, loading: false }));
+      const msg = getFriendlyAuthErrorMessage(err?.code || "");
+      Alert.alert(
+        "Registration Notice",
+        `${msg}\n\nWould you like to continue to the main dashboard in Offline Mode?`,
+        [
+          { text: "Fix Details", style: "cancel" },
+          {
+            text: "Continue Offline",
+            onPress: () => {
+              if (onSuccess) onSuccess({ name: form.name, email: form.email });
+            },
+          },
+        ]
+      );
+    }
   };
 
   return {
