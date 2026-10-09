@@ -6,9 +6,9 @@ import { View, StyleSheet } from "react-native";
 import { useMainNavigation } from "./hooks/useMainNavigation";
 import BottomNavBar from "./components/BottomNavBar";
 import HomeTab from "./components/HomeTab";
-import ChatTab from "./components/ChatTab";
-import NotifTab from "./components/NotifTab";
-import ProfileTab from "./components/ProfileTab";
+import ChatPage from "../chat/page";
+import NotifPage from "../notif/page";
+import ProfilePage from "../profile/page";
 import { MAIN_COLORS } from "./lib/constants";
 
 interface MainPageProps {
@@ -23,11 +23,11 @@ export default function MainPage({ onLogout }: MainPageProps) {
       case "home":
         return <HomeTab />;
       case "chat":
-        return <ChatTab />;
+        return <ChatPage />;
       case "notif":
-        return <NotifTab />;
+        return <NotifPage />;
       case "profile":
-        return <ProfileTab onLogout={onLogout} />;
+        return <ProfilePage onLogout={onLogout} />;
       default:
         return <HomeTab />;
     }

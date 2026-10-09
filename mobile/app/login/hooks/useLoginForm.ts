@@ -45,31 +45,15 @@ export function useLoginForm(onSuccess?: (email: string) => void) {
   };
 
   const handleSubmit = () => {
-    const emailError = validateEmail(form.email);
-    const passwordError = validatePassword(form.password);
-
-    if (emailError || passwordError) {
-      setForm((prev) => ({
-        ...prev,
-        errors: {
-          email: emailError || undefined,
-          password: passwordError || undefined,
-        },
-      }));
-      return;
-    }
-
     setForm((prev) => ({ ...prev, loading: true }));
 
-    // Simulate login request
+    // Skip validation for now — go directly to main
     setTimeout(() => {
       setForm((prev) => ({ ...prev, loading: false }));
       if (onSuccess) {
-        onSuccess(form.email);
-      } else {
-        console.log("Logged in with:", form.email);
+        onSuccess(form.email || "user@lexora.ph");
       }
-    }, 800);
+    }, 400);
   };
 
   return {

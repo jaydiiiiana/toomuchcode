@@ -155,7 +155,7 @@ function AttorneyCard({ attorney }: { attorney: AttorneyItem }) {
         </View>
       </View>
       <View style={styles.attorneyRight}>
-        <Text style={styles.attorneyRate}>{attorney.hourlyRate}</Text>
+
         <View
           style={[
             styles.availBadge,
@@ -386,11 +386,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     gap: 6,
   },
-  attorneyRate: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: MAIN_COLORS.primary,
-  },
+
   availBadge: {
     paddingHorizontal: 8,
     paddingVertical: 3,
