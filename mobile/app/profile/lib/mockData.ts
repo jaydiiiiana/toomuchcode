@@ -1,15 +1,9 @@
 /**
- * Mock data for the Profile screen.
+ * Static data for the Profile screen.
+ * The MOCK_USER is no longer used — real data comes from Firebase + SQLite.
+ * Menu sections remain as static UI configuration.
  */
-import type { MenuSection, UserProfile } from "./types";
-
-export const MOCK_USER: UserProfile = {
-  name: "Lexora User",
-  email: "user@example.com",
-  consultationsCount: 3,
-  savedCount: 12,
-  reviewsCount: 2,
-};
+import type { MenuSection } from "./types";
 
 export const MENU_SECTIONS: MenuSection[] = [
   {

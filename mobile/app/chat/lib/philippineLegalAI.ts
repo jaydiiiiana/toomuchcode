@@ -3,6 +3,8 @@
  * Strictly specialized in Philippine Law (Republic Acts, Revised Penal Code, 1987 PH Constitution, SC Jurisprudence).
  */
 
+import { getLocalAIResponse } from "../../question/lib/knowledgeBase";
+
 export interface LegalAIResponse {
   text: string;
   citations: string[];
@@ -266,17 +268,21 @@ export function generatePhilippineAIResponse(
   // -------------------------------------------------------------
   // 9. GENERAL PHILIPPINE LEGAL CONSULTATION FALLBACK
   // -------------------------------------------------------------
+  const dynamicAdvice = getLocalAIResponse(
+    userMessage,
+    history.map((h) => ({
+      sender: h.senderId === "user" ? ("user" as const) : ("ai" as const),
+      text: h.text,
+    }))
+  );
   return {
-    topic: "General Philippine Legal Advisory",
-    citations: [
+    topic: "Philippine Legal Advisory & Offline Consultation",
+    citations: dynamicAdvice.citations || [
       "Civil Code of the Philippines",
       "Revised Penal Code",
       "1987 Philippine Constitution",
     ],
-    text:
-      "Nakatala ang inyong katanungan sa ilalim ng **Batas ng Pilipinas**.\n\n" +
-      "Sa ilalim ng umiiral na mga batas at regulasyon sa Pilipinas, mahalagang malaman ang eksaktong mga petsa, nakasulat na kasunduan, at mga ebidensya bago magsagawa ng pormal na aksyon o magpadala ng Demand Letter.\n\n" +
-      "Maaari kayong magkwento ng partikular na detalye (halimbawa: kung ito ay tungkol sa kontrata, pamilya, trabaho, o paninira online) at tutulungan kayo ng Lexora Offline Legal AI. Kapag nag-online kayo, awtomatikong ibubuod ang pag-uusap na ito para sa inyong abogado.",
+    text: dynamicAdvice.text,
   };
 }
 

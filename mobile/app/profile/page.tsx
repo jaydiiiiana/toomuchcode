@@ -1,5 +1,6 @@
 /**
  * Profile page – Main entry point for the Profile screen.
+ * Fetches real user data from Firebase + local SQLite with pull-to-refresh.
  */
 import React from "react";
 import {
@@ -8,6 +9,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -22,16 +24,24 @@ interface ProfilePageProps {
 
 export default function ProfilePage({ onLogout }: ProfilePageProps) {
   const insets = useSafeAreaInsets();
-  const { user, sections } = useProfile();
+  const { user, sections, loading, isOnline, refreshProfile } = useProfile();
 
   return (
     <ScrollView
       style={[styles.container, { paddingTop: insets.top }]}
       contentContainerStyle={styles.scrollContent}
       showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={loading}
+          onRefresh={refreshProfile}
+          tintColor={PROFILE_COLORS.primary}
+          colors={[PROFILE_COLORS.primary]}
+        />
+      }
     >
       {/* Profile Card */}
-      <ProfileCard user={user} />
+      <ProfileCard user={user} loading={loading} isOnline={isOnline} />
 
       {/* Menu Sections */}
       {sections.map((section) => (

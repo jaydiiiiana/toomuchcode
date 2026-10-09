@@ -8,7 +8,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignUpHeader from "./components/SignUpHeader";
 import SignUpForm from "./components/SignUpForm";
-import SocialSignUpButtons from "./components/SocialSignUpButtons";
 import SignUpFooter from "./components/SignUpFooter";
 import PolicyModal, { PolicyTab } from "./components/PolicyModal";
 import { useSignUpForm } from "./hooks/useSignUpForm";
@@ -16,16 +15,12 @@ import { SIGNUP_COLORS } from "./lib/constants";
 
 interface SignUpPageProps {
   onNavigateToLogin: () => void;
-  onSignUpSuccess?: (userData: { name: string; email: string }) => void;
-  onGoogleSignUp?: () => void;
-  onAppleSignUp?: () => void;
+  onSignUpSuccess?: (userData: { name: string; email: string; role?: "client" | "attorney" }) => void;
 }
 
 export default function SignUpPage({
   onNavigateToLogin,
   onSignUpSuccess,
-  onGoogleSignUp,
-  onAppleSignUp,
 }: SignUpPageProps) {
   const {
     name,
@@ -36,6 +31,11 @@ export default function SignUpPage({
     agreedToTerms,
     showPassword,
     showConfirmPassword,
+    accountType,
+    barRollNo,
+    ibpChapter,
+    specialization,
+    officeAddress,
     errors,
     loading,
     setName,
@@ -46,6 +46,11 @@ export default function SignUpPage({
     toggleTerms,
     toggleShowPassword,
     toggleShowConfirmPassword,
+    setAccountType,
+    setBarRollNo,
+    setIbpChapter,
+    setSpecialization,
+    setOfficeAddress,
     handleSubmit,
   } = useSignUpForm(onSignUpSuccess);
 
@@ -93,6 +98,11 @@ export default function SignUpPage({
             agreedToTerms={agreedToTerms}
             showPassword={showPassword}
             showConfirmPassword={showConfirmPassword}
+            accountType={accountType}
+            barRollNo={barRollNo}
+            ibpChapter={ibpChapter}
+            specialization={specialization}
+            officeAddress={officeAddress}
             errors={errors}
             loading={loading}
             onChangeName={setName}
@@ -103,15 +113,14 @@ export default function SignUpPage({
             onToggleTerms={toggleTerms}
             onToggleShowPassword={toggleShowPassword}
             onToggleShowConfirmPassword={toggleShowConfirmPassword}
+            onChangeAccountType={setAccountType}
+            onChangeBarRollNo={setBarRollNo}
+            onChangeIbpChapter={setIbpChapter}
+            onChangeSpecialization={setSpecialization}
+            onChangeOfficeAddress={setOfficeAddress}
             onSubmit={handleSubmit}
             onPressTerms={handleOpenTerms}
             onPressPrivacy={handleOpenPrivacy}
-          />
-
-          {/* Social Logins */}
-          <SocialSignUpButtons
-            onGoogleSignUp={onGoogleSignUp}
-            onAppleSignUp={onAppleSignUp}
           />
 
           {/* Footer */}

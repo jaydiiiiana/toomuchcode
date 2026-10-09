@@ -1,12 +1,17 @@
 /**
  * Hook to manage location-based attorney search, filters, and booking state.
+ * Data is fetched from Firestore in real-time.
  */
-import { useState, useMemo, useCallback } from "react";
-import { LOCAL_VALENZUELA_ATTORNEYS } from "../lib/mockData";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import type { AreaAttorney, BookingRequest } from "../lib/types";
 import { saveConsultationBooking } from "../../database";
+import {
+  subscribeToAttorneys,
+  saveConsultationToFirestore,
+} from "../../services/firestoreAttorneyService";
 
 export function useConsultation() {
+  const [attorneys, setAttorneys] = useState<AreaAttorney[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedBarangay, setSelectedBarangay] = useState("All Valenzuela");
   const [selectedSpecialty, setSelectedSpecialty] = useState("All Practices");
@@ -14,8 +19,18 @@ export function useConsultation() {
   const [selectedAttorney, setSelectedAttorney] = useState<AreaAttorney | null>(null);
   const [bookedSuccess, setBookedSuccess] = useState<BookingRequest | null>(null);
 
+  useEffect(() => {
+    const unsubscribe = subscribeToAttorneys((updatedAttorneys) => {
+      setAttorneys(updatedAttorneys);
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
   const filteredAttorneys = useMemo(() => {
-    return LOCAL_VALENZUELA_ATTORNEYS.filter((att) => {
+    return attorneys.filter((att) => {
       // Barangay / Area filter
       if (
         selectedBarangay !== "All Valenzuela" &&
@@ -49,13 +64,14 @@ export function useConsultation() {
 
       return true;
     });
-  }, [searchQuery, selectedBarangay, selectedSpecialty, filterAvailableOnly]);
+  }, [attorneys, searchQuery, selectedBarangay, selectedSpecialty, filterAvailableOnly]);
 
   const handleBook = useCallback(async (request: BookingRequest) => {
     try {
       await saveConsultationBooking(request);
+      await saveConsultationToFirestore(request);
     } catch (err) {
-      console.warn("Failed to persist booking to SQLite:", err);
+      console.warn("Failed to persist booking:", err);
     }
     setSelectedAttorney(null);
     setBookedSuccess(request);

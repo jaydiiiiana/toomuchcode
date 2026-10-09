@@ -4,7 +4,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { ChatMessage } from "../lib/types";
 import { AI_PROFILE } from "../lib/constants";
-import { getLocalAIResponse } from "../lib/knowledgeBase";
+import { getHybridLegalAdvice } from "../../services/hybridLegalAIService";
 import {
   saveChatMessage,
   getChatMessages,
@@ -81,9 +81,13 @@ export function useAIChat() {
         clearTimeout(timerRef.current);
       }
 
-      // Simulate thoughtful AI reasoning delay
-      timerRef.current = setTimeout(() => {
-        const aiAnswer = getLocalAIResponse(query);
+      // Hybrid Legal Reasoning: Option 2 (Local Neural LLM) -> Option 1 (On-Device Dynamic NLG)
+      timerRef.current = setTimeout(async () => {
+        const historyForAI = [...messages, newUserMsg].map((m) => ({
+          sender: m.sender,
+          text: m.text,
+        }));
+        const aiAnswer = await getHybridLegalAdvice(query, historyForAI);
         const aiMsgId = `ai-${Date.now()}`;
 
         const newAIMsg: ChatMessage = {
@@ -105,9 +109,9 @@ export function useAIChat() {
         saveChatMessage(newAIMsg).catch((e) =>
           console.warn("SQLite save error (ai):", e)
         );
-      }, 900);
+      }, 350);
     },
-    [inputText, isThinking]
+    [inputText, isThinking, messages]
   );
 
   const clearChat = useCallback(async () => {

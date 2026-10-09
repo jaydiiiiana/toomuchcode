@@ -1,7 +1,7 @@
 /**
- * Notifications tab – Grouped notifications with read/unread states.
+ * Notifications tab – Grouped notifications with real-time Firestore sync.
  */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,8 +12,12 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MAIN_COLORS } from "../lib/constants";
-import { MOCK_NOTIFICATIONS } from "../lib/mockData";
 import type { NotificationItem } from "../lib/types";
+import {
+  subscribeToNotifications,
+  toggleNotificationReadInFirestore,
+  markAllNotificationsReadInFirestore,
+} from "../../services/firestoreNotificationService";
 
 const NOTIF_TYPE_COLORS: Record<string, string> = {
   appointment: "#0284C7",
@@ -24,18 +28,32 @@ const NOTIF_TYPE_COLORS: Record<string, string> = {
 
 export default function NotifTab() {
   const insets = useSafeAreaInsets();
-  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToNotifications((updatedNotifs) => {
+      setNotifications(updatedNotifs as unknown as NotificationItem[]);
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   const markAllRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    markAllNotificationsReadInFirestore(notifications as any);
   };
 
   const toggleRead = (id: string) => {
+    const item = notifications.find((n) => n.id === id);
+    const nextState = item ? !item.isRead : true;
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, isRead: !n.isRead } : n))
+      prev.map((n) => (n.id === id ? { ...n, isRead: nextState } : n))
     );
+    toggleNotificationReadInFirestore(id, nextState);
   };
 
   return (

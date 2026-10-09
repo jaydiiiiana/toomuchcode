@@ -87,6 +87,31 @@ async function initTables(db: any) {
         summary TEXT,
         saved_at INTEGER NOT NULL
       );
+
+      -- Attorney applications table
+      CREATE TABLE IF NOT EXISTS attorney_applications (
+        id TEXT PRIMARY KEY NOT NULL,
+        user_id TEXT NOT NULL,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone TEXT,
+        bar_roll_no TEXT NOT NULL,
+        ibp_chapter TEXT NOT NULL,
+        specialization TEXT NOT NULL,
+        office_address TEXT,
+        status TEXT NOT NULL DEFAULT 'pending',
+        created_at INTEGER NOT NULL
+      );
+
+      -- Persistent user auth session table
+      CREATE TABLE IF NOT EXISTS auth_session (
+        id TEXT PRIMARY KEY NOT NULL DEFAULT 'active_session',
+        email TEXT NOT NULL,
+        role TEXT NOT NULL DEFAULT 'client',
+        name TEXT,
+        uid TEXT,
+        logged_in_at INTEGER NOT NULL
+      );
     `);
   } catch (err) {
     console.warn("SQLite initTables notice:", err);

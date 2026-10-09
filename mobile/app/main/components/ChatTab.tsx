@@ -1,7 +1,8 @@
 /**
  * Chat tab – List of chat threads with attorneys and support.
+ * Synced with Firestore in real-time.
  */
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -13,15 +14,32 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MAIN_COLORS } from "../lib/constants";
-import { MOCK_CHATS } from "../lib/mockData";
 import type { ChatThread } from "../lib/types";
+import { subscribeToChatThreads } from "../../services/firestoreChatService";
 
 export default function ChatTab() {
   const insets = useSafeAreaInsets();
   const [searchQuery, setSearchQuery] = useState("");
+  const [threads, setThreads] = useState<ChatThread[]>([]);
 
-  const filteredChats = MOCK_CHATS.filter((c) =>
-    c.name.toLowerCase().includes(searchQuery.toLowerCase())
+  useEffect(() => {
+    const unsubscribe = subscribeToChatThreads((updatedThreads) => {
+      setThreads(updatedThreads as unknown as ChatThread[]);
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
+  const filteredChats = useMemo(
+    () =>
+      threads.filter(
+        (c) =>
+          c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (c.lastMessage && c.lastMessage.toLowerCase().includes(searchQuery.toLowerCase()))
+      ),
+    [threads, searchQuery]
   );
 
   return (
@@ -71,7 +89,7 @@ export default function ChatTab() {
 }
 
 function ChatRow({ chat }: { chat: ChatThread }) {
-  const hasUnread = chat.unreadCount > 0;
+  const hasUnread = (chat.unreadCount || 0) > 0;
 
   return (
     <TouchableOpacity style={styles.chatRow} activeOpacity={0.6}>

@@ -1,11 +1,11 @@
 /**
  * Firestore Chat Service.
  * Manages real-time 1-on-1 direct messaging threads and message sync in Firestore.
+ * No mock data — all data comes from Firestore.
  */
 import {
   collection,
   doc,
-  getDocs,
   setDoc,
   updateDoc,
   onSnapshot,
@@ -16,66 +16,30 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../database/firebase";
 import { ChatThread, DirectMessage } from "../chat/lib/types";
-import { MOCK_CHATS, MOCK_THREAD_MESSAGES } from "../chat/lib/mockData";
 
 const CHATS_COLLECTION = "chats";
 
 /**
- * Initializes default chat threads in Firestore if not present.
- */
-export async function seedInitialChatsIfEmpty(): Promise<void> {
-  try {
-    const chatsRef = collection(firestore, CHATS_COLLECTION);
-    const snap = await getDocs(chatsRef);
-
-    if (snap.empty) {
-      for (const chat of MOCK_CHATS) {
-        await setDoc(doc(firestore, CHATS_COLLECTION, chat.id), chat);
-
-        // Seed messages
-        const initialMsgs = MOCK_THREAD_MESSAGES[chat.id] || [];
-        for (const msg of initialMsgs) {
-          await setDoc(
-            doc(firestore, `${CHATS_COLLECTION}/${chat.id}/messages`, msg.id),
-            {
-              ...msg,
-              createdAt: serverTimestamp(),
-            }
-          );
-        }
-      }
-    }
-  } catch (err) {
-    console.warn("Could not seed chats to Firestore (offline or unauthenticated):", err);
-  }
-}
-
-/**
  * Subscribes to real-time chat threads list from Firestore.
+ * Returns empty array if no threads exist yet.
  */
 export function subscribeToChatThreads(
   onUpdate: (threads: ChatThread[]) => void
 ): Unsubscribe {
   const chatsRef = collection(firestore, CHATS_COLLECTION);
 
-  seedInitialChatsIfEmpty();
-
   return onSnapshot(
     chatsRef,
     (snapshot) => {
-      if (!snapshot.empty) {
-        const items: ChatThread[] = [];
-        snapshot.forEach((docSnap) => {
-          items.push({ id: docSnap.id, ...(docSnap.data() as any) });
-        });
-        onUpdate(items);
-      } else {
-        onUpdate(MOCK_CHATS);
-      }
+      const items: ChatThread[] = [];
+      snapshot.forEach((docSnap) => {
+        items.push({ id: docSnap.id, ...(docSnap.data() as any) });
+      });
+      onUpdate(items);
     },
     (error) => {
-      console.warn("Firestore chat threads snapshot error, using local:", error);
-      onUpdate(MOCK_CHATS);
+      console.warn("Firestore chat threads snapshot error:", error);
+      onUpdate([]);
     }
   );
 }
@@ -92,19 +56,15 @@ export function subscribeToChatMessages(
   return onSnapshot(
     msgsRef,
     (snapshot) => {
-      if (!snapshot.empty) {
-        const msgs: DirectMessage[] = [];
-        snapshot.forEach((docSnap) => {
-          msgs.push({ id: docSnap.id, ...(docSnap.data() as any) });
-        });
-        onUpdate(msgs);
-      } else {
-        onUpdate(MOCK_THREAD_MESSAGES[chatId] || []);
-      }
+      const msgs: DirectMessage[] = [];
+      snapshot.forEach((docSnap) => {
+        msgs.push({ id: docSnap.id, ...(docSnap.data() as any) });
+      });
+      onUpdate(msgs);
     },
     (error) => {
-      console.warn("Firestore messages snapshot error, using local:", error);
-      onUpdate(MOCK_THREAD_MESSAGES[chatId] || []);
+      console.warn("Firestore messages snapshot error:", error);
+      onUpdate([]);
     }
   );
 }
@@ -136,5 +96,19 @@ export async function sendMessageToFirestore(
     });
   } catch (err) {
     console.warn("Error sending message to Firestore (will save locally):", err);
+  }
+}
+
+/**
+ * Creates a new chat thread in Firestore (e.g. when starting a conversation with an attorney).
+ */
+export async function createChatThread(thread: ChatThread): Promise<void> {
+  try {
+    await setDoc(doc(firestore, CHATS_COLLECTION, thread.id), {
+      ...thread,
+      createdAt: serverTimestamp(),
+    });
+  } catch (err) {
+    console.warn("Error creating chat thread in Firestore:", err);
   }
 }

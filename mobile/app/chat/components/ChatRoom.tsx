@@ -18,10 +18,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { CHAT_COLORS } from "../lib/constants";
 import {
-  MOCK_THREAD_MESSAGES,
   generatePhilippineAIResponse,
   generateAttorneyCaseSummary,
-} from "../lib/mockData";
+} from "../lib/philippineLegalAI";
 import type { ChatThread, DirectMessage } from "../lib/types";
 import {
   subscribeToChatMessages,
@@ -34,11 +33,7 @@ interface ChatRoomProps {
 }
 
 export default function ChatRoom({ chat, onBack }: ChatRoomProps) {
-  const [messages, setMessages] = useState<DirectMessage[]>(
-    chat?.id && MOCK_THREAD_MESSAGES[chat.id]
-      ? MOCK_THREAD_MESSAGES[chat.id]
-      : []
-  );
+  const [messages, setMessages] = useState<DirectMessage[]>([]);
   const [inputText, setInputText] = useState("");
   const [isOffline, setIsOffline] = useState(false);
   const [isAiThinking, setIsAiThinking] = useState(false);
