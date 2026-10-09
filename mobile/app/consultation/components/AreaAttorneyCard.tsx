@@ -63,12 +63,12 @@ export default function AreaAttorneyCard({
       {/* IBP Chapter & Next Slot */}
       <View style={styles.badgeRow}>
         <View style={styles.ibpBadge}>
-          <Ionicons name="shield-checkmark" size={12} color="#059669" />
+          <Ionicons name="shield-checkmark" size={12} color={CONSULTATION_COLORS.primary} />
           <Text style={styles.ibpText}>{attorney.ibpChapter}</Text>
         </View>
 
         <View style={styles.slotBadge}>
-          <Ionicons name="time-outline" size={12} color="#D97706" />
+          <Ionicons name="time-outline" size={12} color={CONSULTATION_COLORS.primary} />
           <Text style={styles.slotText}>{attorney.nextSlot}</Text>
         </View>
       </View>
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: "#10B981",
+    backgroundColor: CONSULTATION_COLORS.primary,
     borderWidth: 2,
     borderColor: "#FFFFFF",
   },
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-    backgroundColor: "#D1FAE5",
+    backgroundColor: CONSULTATION_COLORS.primaryLight,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
@@ -250,21 +250,23 @@ const styles = StyleSheet.create({
   ibpText: {
     fontSize: 10.5,
     fontWeight: "700",
-    color: "#059669",
+    color: CONSULTATION_COLORS.primaryDark,
   },
   slotBadge: {
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-    backgroundColor: "#FEF3C7",
+    backgroundColor: "#F0F6FC",
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: CONSULTATION_COLORS.border,
   },
   slotText: {
     fontSize: 10.5,
     fontWeight: "600",
-    color: "#D97706",
+    color: CONSULTATION_COLORS.primaryDark,
   },
   footerRow: {
     flexDirection: "row",

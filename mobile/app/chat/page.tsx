@@ -1,7 +1,7 @@
 /**
  * Chat page – Main entry point for the Chat screen.
  */
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, FlatList, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -9,10 +9,22 @@ import { CHAT_COLORS } from "./lib/constants";
 import { useChatSearch } from "./hooks/useChatSearch";
 import ChatHeader from "./components/ChatHeader";
 import ChatRow from "./components/ChatRow";
+import ChatRoom from "./components/ChatRoom";
+import type { ChatThread } from "./lib/types";
 
 export default function ChatPage() {
   const insets = useSafeAreaInsets();
   const { searchQuery, setSearchQuery, filteredChats } = useChatSearch();
+  const [activeChat, setActiveChat] = useState<ChatThread | null>(null);
+
+  // If a chat thread is clicked, open the full chat conversation screen
+  if (activeChat) {
+    return (
+      <View style={[styles.container, { paddingTop: insets.top }]}>
+        <ChatRoom chat={activeChat} onBack={() => setActiveChat(null)} />
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -21,7 +33,9 @@ export default function ChatPage() {
       <FlatList
         data={filteredChats}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ChatRow chat={item} />}
+        renderItem={({ item }) => (
+          <ChatRow chat={item} onPress={() => setActiveChat(item)} />
+        )}
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
         ItemSeparatorComponent={() => <View style={styles.separator} />}

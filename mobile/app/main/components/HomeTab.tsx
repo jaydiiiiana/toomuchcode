@@ -195,13 +195,21 @@ function AttorneyCard({
         <View
           style={[
             styles.availBadge,
-            { backgroundColor: attorney.isAvailable ? "#D1FAE5" : "#FEE2E2" },
+            {
+              backgroundColor: attorney.isAvailable
+                ? MAIN_COLORS.primaryLight
+                : "#F1F5F9",
+            },
           ]}
         >
           <Text
             style={[
               styles.availText,
-              { color: attorney.isAvailable ? "#059669" : "#DC2626" },
+              {
+                color: attorney.isAvailable
+                  ? MAIN_COLORS.primaryDark
+                  : MAIN_COLORS.textMuted,
+              },
             ]}
           >
             {attorney.isAvailable ? "Available" : "Busy"}

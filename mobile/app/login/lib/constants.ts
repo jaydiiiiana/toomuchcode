@@ -20,14 +20,14 @@ export const LOGIN_COPY = {
 
 export const LOGIN_COLORS = {
   surface: "#FFFFFF",
-  surfaceInput: "#F8FAFC",
-  border: "#E2E8F0",
-  borderFocus: "#0284C7",
-  primary: "#0284C7",
-  primaryDark: "#0369A1",
-  primaryLight: "#E0F2FE",
-  textPrimary: "#0F172A",
+  surfaceInput: "#F4F8FC",
+  border: "#D8E6F5",
+  borderFocus: "#5B9BD5",
+  primary: "#5B9BD5",
+  primaryDark: "#2B6CB0",
+  primaryLight: "#EBF3FA",
+  textPrimary: "#1E293B",
   textSecondary: "#475569",
-  textMuted: "#64748B",
-  error: "#EF4444",
+  textMuted: "#88A3C0",
+  error: "#DC2626",
 } as const;

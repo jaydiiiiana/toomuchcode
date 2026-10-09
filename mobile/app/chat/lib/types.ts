@@ -10,4 +10,12 @@ export interface ChatThread {
   unreadCount: number;
   isOnline: boolean;
   avatar?: string;
+  specialty?: string;
+}
+
+export interface DirectMessage {
+  id: string;
+  senderId: "user" | "attorney";
+  text: string;
+  timestamp: string;
 }
